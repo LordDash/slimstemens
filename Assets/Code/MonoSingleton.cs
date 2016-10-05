@@ -21,13 +21,18 @@ public class MonoSingleton<T> : MonoBehaviour where T : MonoBehaviour
     private static T CreateInstance()
     {
         GameObject instanceGO = new GameObject(typeof(T).ToString());
-        GameObject.DontDestroyOnLoad(instanceGO);
+        DontDestroyOnLoad(instanceGO);
 
         return instanceGO.AddComponent<T>();
     }
 
     private void Awake ()
     {
+        if (_instance == null)
+        {
+            _instance = GetComponent<T>();
+        }
+
         if (_instance != this)
         {
             Destroy(gameObject);

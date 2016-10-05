@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class ThreeSixFiveRound : GameRound
+public class ThreeSixNineRound : GameRound
 {
     private static readonly ThreeSixNineQuestion[] Questions = new ThreeSixNineQuestion[]
         {
@@ -27,6 +27,8 @@ public class ThreeSixFiveRound : GameRound
     private int _currentQuestionIndex;
     private int _currentTeamIndex;
 
+    private ThreeSixNineViewController _view;
+
     private TeamData CurrentTeam
     {
         get { return _teams[_currentTeamIndex]; }
@@ -41,9 +43,14 @@ public class ThreeSixFiveRound : GameRound
 
     public override void Start(TeamData[] teams)
     {
-        this._teams = teams;
-        this._currentQuestionIndex = -1;
-        this._currentTeamIndex = 0;
+        Debug.LogFormat("[ThreeSixNine] Start round");
+        _teams = teams;
+        _currentQuestionIndex = -1;
+        _currentTeamIndex = 0;
+
+        _view = GameObject.FindObjectOfType<ThreeSixNineViewController>();
+        _view.SetController(this);
+        _view.SetActiveTeam(_currentTeamIndex);
     }
 
     public override string SceneName
@@ -62,26 +69,32 @@ public class ThreeSixFiveRound : GameRound
 
         if(_currentQuestionIndex < Questions.Length)
         {
-            // Show question
+            Debug.LogFormat("[ThreeSixNine] Next question\n{0}", CurrentQuestion.ToString());
+            _view.SetQuestion(_currentQuestionIndex, CurrentQuestion.Question, CurrentQuestion.Answer);
         }
         else
         {
+            Debug.LogFormat("[ThreeSixNine] Next round");
             GameManager.NextRound();
         }
     }
 
     public void AnsweredCorrect()
     {
-        // Show answer
+        _view.SetAnswer(CurrentQuestion.Answer);
 
         CurrentTeam.Time += CurrentQuestion.TimeReward;
+
+        Debug.LogFormat("[ThreeSixNine] Answer correct, added {0} seconds to {1}", CurrentQuestion.TimeReward, CurrentTeam.Name);
     }
 
     public void AnsweredWrong()
     {
         _currentTeamIndex = (_currentTeamIndex + 1) % _teams.Length;
 
-        // Show next team is active
+        _view.SetActiveTeam(_currentTeamIndex);
+
+        Debug.LogFormat("[ThreeSixNine] Answer wrong, {0}'s turn", CurrentTeam.Name);
     }
 }
 
@@ -90,4 +103,9 @@ public class ThreeSixNineQuestion
     public string Question;
     public string Answer;
     public int TimeReward;
+
+    public override string ToString()
+    {
+        return string.Format("{0} [A: {1}] [{2}]", Question, Answer, TimeReward);
+    }
 }

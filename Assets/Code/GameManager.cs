@@ -29,7 +29,7 @@ public class GameManager
         switch (CurrentRound)
         {
             case Round.ThreeSixNine:
-                _currentGameRound = new ThreeSixFiveRound();
+                _currentGameRound = new ThreeSixNineRound();
                 break;
             case Round.OpenDoor:
                 _currentGameRound = new OpenDoorRound();
