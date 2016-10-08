@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 public class ThreeSixNineRound : GameRound
 {
@@ -23,9 +24,25 @@ public class ThreeSixNineRound : GameRound
             new ThreeSixNineQuestion() { Question = "Vraag 15", Answer = "Antwoord 15", TimeReward = 10 },
         };
 
+    private Action _onWaitingForNextQuestion = () => { };
+
+    public event Action OnWaitingForNextQuestionPrompt
+    {
+        add
+        {
+            _onWaitingForNextQuestion -= value;
+            _onWaitingForNextQuestion += value;
+        }
+        remove
+        {
+            _onWaitingForNextQuestion -= value;
+        }
+    }
+
     private TeamData[] _teams;
     private int _currentQuestionIndex;
     private int _currentTeamIndex;
+    private List<int> _currentQuestionTeamsPlayedIndeces = new List<int>();
 
     private ThreeSixNineViewController _view;
 
@@ -50,7 +67,11 @@ public class ThreeSixNineRound : GameRound
 
         _view = GameObject.FindObjectOfType<ThreeSixNineViewController>();
         _view.SetController(this);
+        _view.SetTeamData(_teams);
         _view.SetActiveTeam(_currentTeamIndex);
+        _view.SetQuestion(-1, "", "Press Next Question to start the game.");
+
+        _onWaitingForNextQuestion();
     }
 
     public override string SceneName
@@ -85,14 +106,29 @@ public class ThreeSixNineRound : GameRound
 
         CurrentTeam.Time += CurrentQuestion.TimeReward;
 
+        _onWaitingForNextQuestion();
+
+        _currentQuestionTeamsPlayedIndeces.Clear();
+
         Debug.LogFormat("[ThreeSixNine] Answer correct, added {0} seconds to {1}", CurrentQuestion.TimeReward, CurrentTeam.Name);
     }
 
     public void AnsweredWrong()
     {
+        _currentQuestionTeamsPlayedIndeces.Add(_currentTeamIndex);
+
         _currentTeamIndex = (_currentTeamIndex + 1) % _teams.Length;
 
         _view.SetActiveTeam(_currentTeamIndex);
+
+        if (_currentQuestionTeamsPlayedIndeces.Contains(_currentTeamIndex))
+        {
+            _view.SetAnswer(CurrentQuestion.Answer);
+
+            _onWaitingForNextQuestion();
+
+            _currentQuestionTeamsPlayedIndeces.Clear();
+        }
 
         Debug.LogFormat("[ThreeSixNine] Answer wrong, {0}'s turn", CurrentTeam.Name);
     }

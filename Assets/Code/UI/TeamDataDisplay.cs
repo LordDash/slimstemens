@@ -5,6 +5,9 @@ using System;
 
 public class TeamDataDisplay : MonoBehaviour
 {
+    private static readonly int ActiveHash = Animator.StringToHash("Active");
+    private static readonly int CountingHash = Animator.StringToHash("CountDown");
+
     [SerializeField]
     private Text _nameField;
 
@@ -12,7 +15,7 @@ public class TeamDataDisplay : MonoBehaviour
     private Text _timeField;
 
     [SerializeField]
-    private Image _activeImage;
+    private Animator _animator;
 
     private TeamData _data;
 
@@ -37,9 +40,10 @@ public class TeamDataDisplay : MonoBehaviour
         }
     }
 
-    public void SetCurrentActive(bool active)
+    public void SetState(bool active, bool counting = true)
     {
-        _activeImage.gameObject.SetActive(active);
+        _animator.SetBool(CountingHash, counting);
+        _animator.SetBool(ActiveHash, active);
     }
 
     private void OnDestroy()

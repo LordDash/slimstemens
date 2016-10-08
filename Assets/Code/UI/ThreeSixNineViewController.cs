@@ -5,6 +5,8 @@ using System;
 
 public class ThreeSixNineViewController : MonoBehaviour
 {
+    private static readonly int ActiveHash = Animator.StringToHash("Active");
+
     [SerializeField]
     private TeamDataDisplay[] _teamDataDisplays;
 
@@ -15,7 +17,7 @@ public class ThreeSixNineViewController : MonoBehaviour
     private Text _answerField;
 
     [SerializeField]
-    private Image[] _activeQuestionImages;
+    private Animator[] _questionAnimators;
 
     [SerializeField]
     private Button _nextQuestionButton;
@@ -54,9 +56,9 @@ public class ThreeSixNineViewController : MonoBehaviour
         _questionField.text = question;
         _answerField.text = answer;
 
-        for (int i = 0; i < _activeQuestionImages.Length; i++)
+        for (int i = 0; i < _questionAnimators.Length; i++)
         {
-            _activeQuestionImages[i].gameObject.SetActive(i == index);
+            _questionAnimators[i].SetBool(ActiveHash, i == index);
         }
     }
 
@@ -79,7 +81,7 @@ public class ThreeSixNineViewController : MonoBehaviour
 
         for (int i = 0; i < _teamDataDisplays.Length; i++)
         {
-            _teamDataDisplays[i].SetCurrentActive(i == index);
+            _teamDataDisplays[i].SetState(i == index, false);
         }
     }
 
@@ -87,9 +89,26 @@ public class ThreeSixNineViewController : MonoBehaviour
     {
         _controller = controller;
 
+        _controller.OnWaitingForNextQuestionPrompt += SetStateToWaitingForNextQuestion;
+
         _nextQuestionButton.onClick.AddListener(_controller.NextQuestion);
+        _nextQuestionButton.onClick.AddListener(SetStateToWaitingForAnswer);
         _correctAnswerButton.onClick.AddListener(_controller.AnsweredCorrect);
         _wrongAnswerButton.onClick.AddListener(_controller.AnsweredWrong);
+    }
+
+    private void SetStateToWaitingForAnswer()
+    {
+        _nextQuestionButton.interactable = false;
+        _correctAnswerButton.interactable = true;
+        _wrongAnswerButton.interactable = true;
+    }
+
+    private void SetStateToWaitingForNextQuestion()
+    {
+        _nextQuestionButton.interactable = true;
+        _correctAnswerButton.interactable = false;
+        _wrongAnswerButton.interactable = false;
     }
 
     private void OnDestroy()

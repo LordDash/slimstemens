@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class GameManager 
+public static class GameManager 
 {
     private static Round[] _rounds;
     private static TeamData[] _teams;
