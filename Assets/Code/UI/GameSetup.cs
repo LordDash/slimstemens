@@ -22,6 +22,6 @@ public class GameSetup : MonoBehaviour
 
     private void StartNewGame()
     {
-        GameManager.Start(new[] { Round.ThreeSixNine }, new[] { new TeamData() { Name = "Stijn" }, new TeamData() { Name = "Dave" }, new TeamData() { Name = "Kim" } });
+        GameManager.Start(new[] { Round.ThreeSixNine, Round.Puzzle }, new[] { new TeamData() { Name = "Stijn", Time = 60 }, new TeamData() { Name = "Dave", Time = 60 }, new TeamData() { Name = "Kim", Time = 60 } });
     }
 }
