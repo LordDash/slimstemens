@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine.UI;
 using System;
 
-public class ThreeSixNinePlayerView : ThreeSixNineViewController
+public class ThreeSixNinePlayerView : ThreeSixNineView
 {
     
 }

@@ -7,7 +7,7 @@ public class ThreeSixNineRound : GameRound
 {
     private static readonly ThreeSixNineQuestion[] Questions = new ThreeSixNineQuestion[]
         {
-            new ThreeSixNineQuestion() { Question = "Vraag 1", Answer = "Antwoord 1", TimeReward = 0 },
+            new ThreeSixNineQuestion() { Question = "Wie antwoorde op de vragenlijst dat hij/zij geboren is in het jaar 198?", Answer = "Jeroen", TimeReward = 0 },
             new ThreeSixNineQuestion() { Question = "Vraag 2", Answer = "Antwoord 2", TimeReward = 0 },
             new ThreeSixNineQuestion() { Question = "Vraag 3", Answer = "Antwoord 3", TimeReward = 10 },
             new ThreeSixNineQuestion() { Question = "Vraag 4", Answer = "Antwoord 4", TimeReward = 0 },
