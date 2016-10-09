@@ -21,7 +21,7 @@ public static class FileLoader
         {
             int index = assetPath.LastIndexOf(ResourcesMiddle);
 
-            resourcePath = assetPath.Remove(0, assetPath.Length - index + ResourcesMiddle.Length);
+            resourcePath = assetPath.Remove(0, index + ResourcesMiddle.Length);
         }
         else
         {
@@ -29,9 +29,10 @@ public static class FileLoader
         }
 
         string fileExtension = Path.GetExtension(resourcePath);
+        resourcePath = resourcePath.Remove(resourcePath.LastIndexOf(fileExtension), fileExtension.Length);
 
-        resourcePath = resourcePath.Remove(resourcePath.Length - fileExtension.Length - 1, fileExtension.Length + 1);
+        T returnValue = Resources.Load<T>(resourcePath);
 
-        return Resources.Load<T>(resourcePath);
+        return returnValue;
     }
 }

@@ -17,7 +17,7 @@ public class OpenDoorViewController : OpenDoorView
     private Button[] _answerButtons;
 
     [SerializeField]
-    private Button _nextPlayerButton;
+    private Button _startTimerButton;
 
     [SerializeField]
     private Button _playerPassedButton;
@@ -42,8 +42,8 @@ public class OpenDoorViewController : OpenDoorView
             _answerButtons[i].interactable = false;
         }
 
-        _nextPlayerButton.onClick.AddListener(_controller.StartTimer);
-        _nextPlayerButton.onClick.AddListener(SetStateToWaitingForAnswer);
+        _startTimerButton.onClick.AddListener(_controller.StartTimer);
+        _startTimerButton.onClick.AddListener(SetStateToWaitingForAnswer);
         _playerPassedButton.onClick.AddListener(_controller.TeamPassed);
         _nextQuestionButton.onClick.AddListener(_controller.NextQuestion);
         _nextQuestionButton.onClick.AddListener(SetStateToWaitingForQuestionPicked);
@@ -53,26 +53,26 @@ public class OpenDoorViewController : OpenDoorView
             int index = i;
             _questionButtons[i].onClick.RemoveAllListeners();
             _questionButtons[i].onClick.AddListener(() => { Debug.LogFormat("Trying to set question {0}", index); _questionButtons[index].interactable = false; _controller.NextQuestion(index); });
-            _questionButtons[i].onClick.AddListener(SetStateToWaitingForAnswer);
+            _questionButtons[i].onClick.AddListener(SetStateWaitingForStartTimer);
             _questionButtons[i].interactable = true;
         }
         _questionCanvas.interactable = false;
 
         _controller.OnWaitingForNextQuestionPrompt += SetStateToWaitingForNextQuestion;
-        _controller.OnWaitingForNextPlayer += SetStateWaitingForNextPlayer;
+        _controller.OnWaitingForStartTimer += SetStateWaitingForStartTimer;
     }
 
     private void SetStateToWaitingForQuestionPicked()
     {
-        _nextPlayerButton.interactable = false;
-        _playerPassedButton.interactable = true;
+        _startTimerButton.interactable = false;
+        _playerPassedButton.interactable = false;
         _questionCanvas.interactable = true;
         _nextQuestionButton.interactable = false;
     }
 
-    private void SetStateWaitingForNextPlayer()
+    private void SetStateWaitingForStartTimer()
     {
-        _nextPlayerButton.interactable = true;
+        _startTimerButton.interactable = true;
         _playerPassedButton.interactable = false;
         _questionCanvas.interactable = false;
         _nextQuestionButton.interactable = false;
@@ -80,7 +80,7 @@ public class OpenDoorViewController : OpenDoorView
 
     private void SetStateToWaitingForAnswer()
     {
-        _nextPlayerButton.interactable = false;
+        _startTimerButton.interactable = false;
         _playerPassedButton.interactable = true;
         _questionCanvas.interactable = false;
         _nextQuestionButton.interactable = false;
@@ -95,7 +95,7 @@ public class OpenDoorViewController : OpenDoorView
             _answerButtons[i].onClick.AddListener(() => { Debug.LogFormat("Trying to show answer {0}", index); _answerButtons[index].interactable = false; _controller.ShowAnswer(index); });
         }
 
-        _nextPlayerButton.interactable = false;
+        _startTimerButton.interactable = false;
         _playerPassedButton.interactable = false;
         _nextQuestionButton.interactable = true;
     }
@@ -109,6 +109,8 @@ public class OpenDoorViewController : OpenDoorView
 
     public override void SetActiveTeam(int index, bool counting)
     {
+        Debug.LogFormat("Next team to play: {0}", index);
+
         base.SetActiveTeam(index, counting);
 
         _playerView.SetActiveTeam(index, counting);
@@ -120,7 +122,12 @@ public class OpenDoorViewController : OpenDoorView
 
         for (int i = 0; i < answers.Length; i++)
         {
-            base.ShowAnswer(i, true);
+            base.ShowAnswer(i, false);
+
+            int index = i;
+            _answerButtons[i].onClick.RemoveAllListeners();
+            _answerButtons[i].onClick.AddListener(() => { Debug.LogFormat("Trying to show answer {0}", index); _answerButtons[index].interactable = false; _controller.CorrectAnswer(index); });
+            _answerButtons[i].interactable = true;
         }
 
         _question.text = question;
@@ -154,5 +161,12 @@ public class OpenDoorViewController : OpenDoorView
     public override void ShowVideo(int questionIndex)
     {
         _playerView.ShowVideo(questionIndex);
+    }
+
+    public override void SetVideoUsed(int questionIndex)
+    {
+        base.SetVideoUsed(questionIndex);
+
+        _playerView.SetVideoUsed(questionIndex);
     }
 }

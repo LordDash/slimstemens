@@ -103,7 +103,7 @@ public class OpenDoorRound : GameRound
     private OpenDoorQuestion[] _questions;
 
     private Action _onWaitingForNextQuestion = () => { };
-    private Action _onWaitingForNextPlayer = () => { };
+    private Action _onWaitingForStartTimer = () => { };
     private Action _onWaitingForEndRound = () => { };
     private OpenDoorViewController _view;
 
@@ -143,16 +143,16 @@ public class OpenDoorRound : GameRound
         }
     }
 
-    public event Action OnWaitingForNextPlayer
+    public event Action OnWaitingForStartTimer
     {
         add
         {
-            _onWaitingForNextPlayer -= value;
-            _onWaitingForNextPlayer += value;
+            _onWaitingForStartTimer -= value;
+            _onWaitingForStartTimer += value;
         }
         remove
         {
-            _onWaitingForNextPlayer -= value;
+            _onWaitingForStartTimer -= value;
         }
     }
 
@@ -162,12 +162,12 @@ public class OpenDoorRound : GameRound
         _currentQuestionTeamsPlayedIndeces.Clear();
 
         _currentQuestionTeamIndex = GetNextTeamIndex(_roundTeamsPlayedIndeces, _currentQuestionTeamIndex);
+        _currentTeamIndex = _currentQuestionTeamIndex;
 
         _view.SetActiveTeam(_currentTeamIndex, false);
 
         if (_currentQuestionTeamIndex != -1)
         {
-            _currentTeamIndex = _currentQuestionTeamIndex;
             _view.ClearAnswers();
             _view.SetVideoUsed(_currentQuestionIndex);
         }
@@ -186,7 +186,7 @@ public class OpenDoorRound : GameRound
     private void StopTimer()
     {
         _view.SetActiveTeam(_currentTeamIndex, false);
-        TimeManager.Instance.AddTimer(_timer);
+        TimeManager.Instance.RemoveTimer(_timer);
     }
 
     private void UpdateCurrentTeamTime(float timeDelta)
@@ -254,16 +254,20 @@ public class OpenDoorRound : GameRound
 
         _currentTeamIndex = GetNextTeamIndex(_currentQuestionTeamsPlayedIndeces, _currentTeamIndex);
 
+        StopTimer();
+        _onWaitingForStartTimer();
+
         if (_currentTeamIndex == -1)
         {
             EndQuestion();
         }
     }
 
-    public void NextQuestion(int index)
+    public void NextQuestion(int questionIndex)
     {
-        _currentQuestionIndex = index;
+        _currentQuestionIndex = questionIndex;
 
         _view.SetAnswers(CurrentQuestion.Question, CurrentQuestion.GetTimeRewards(), CurrentQuestion.GetAnswers());
+        _view.ShowVideo(questionIndex);
     }
 }

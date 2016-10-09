@@ -23,7 +23,7 @@ public class AnswerView : MonoBehaviour
         _blurredAnswerText.text = answer;
         _answerText.text = answer;
 
-        _answerText.color = color;
+        _answerText.color = color == default(Color) ? Color.white : color;
 
         if (score == -1)
         {
