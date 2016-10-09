@@ -25,7 +25,14 @@ public class AnswerView : MonoBehaviour
 
         _answerText.color = color;
 
-        _scoreText.text = score.ToString();
+        if (score == -1)
+        {
+            _scoreText.text = "";
+        }
+        else
+        {
+            _scoreText.text = score.ToString();
+        }
 
         _animator.SetBool(VisibleHash, false);
     }

@@ -34,12 +34,47 @@ public class OpenDoorRound : GameRound
     public override void Start(TeamData[] teams, Question[] questions)
     {
         _questions = questions as OpenDoorQuestion[];
-        _currentQuestionIndex = 0;
+        _currentQuestionIndex = -1;
+        _currentQuestionTeamIndex = -1;
+        _currentTeamIndex = -1;
         _teams = teams;
         _roundTeamsPlayedIndeces = new List<int>(_teams.Length);
         _currentQuestionTeamsPlayedIndeces = new List<int>(_teams.Length);
 
         _timer = UpdateCurrentTeamTime;
+
+        _view = GameObject.FindObjectOfType<OpenDoorViewController>();
+        _view.SetController(this);
+        _view.SetTeamData(_teams);
+        _view.SetAnswers("Press the Next Question button to start the round.", new int[0], new string[0]);
+        _view.SetVideos(GetQuestionVideos(), GetQuestionFirstFrames());
+        _view.ClearAnswers();
+
+        _onWaitingForNextQuestion();
+    }
+
+    private Sprite[] GetQuestionFirstFrames()
+    {
+        Sprite[] firstFrames = new Sprite[_questions.Length];
+
+        for (int i = 0; i < _questions.Length; i++)
+        {
+            firstFrames[i] = FileLoader.Load<Sprite>(_questions[i].QuestionFirstFrameFilePath);
+        }
+
+        return firstFrames;
+    }
+
+    private MovieTexture[] GetQuestionVideos()
+    {
+        MovieTexture[] videos = new MovieTexture[_questions.Length];
+
+        for (int i = 0; i < _questions.Length; i++)
+        {
+            videos[i] = FileLoader.Load<MovieTexture>(_questions[i].QuestionFilePath);
+        }
+
+        return videos;
     }
 
     public override string SceneName
@@ -58,6 +93,7 @@ public class OpenDoorRound : GameRound
 
     private int _currentCorrectAnswersCount;
     private int _currentTeamIndex;
+
     private List<int> _currentQuestionTeamsPlayedIndeces;
 
     private int _currentQuestionTeamIndex;
@@ -65,6 +101,11 @@ public class OpenDoorRound : GameRound
 
     private Action<float> _timer;
     private OpenDoorQuestion[] _questions;
+
+    private Action _onWaitingForNextQuestion = () => { };
+    private Action _onWaitingForNextPlayer = () => { };
+    private Action _onWaitingForEndRound = () => { };
+    private OpenDoorViewController _view;
 
     private TeamData CurrentTeam
     {
@@ -76,6 +117,45 @@ public class OpenDoorRound : GameRound
         get{ return _questions[_currentQuestionIndex]; }
     }
 
+    public event Action OnWaitingForEndRound
+    {
+        add
+        {
+            _onWaitingForEndRound -= value;
+            _onWaitingForEndRound += value;
+        }
+        remove
+        {
+            _onWaitingForEndRound -= value;
+        }
+    }
+
+    public event Action OnWaitingForNextQuestionPrompt
+    {
+        add
+        {
+            _onWaitingForNextQuestion -= value;
+            _onWaitingForNextQuestion += value;
+        }
+        remove
+        {
+            _onWaitingForNextQuestion -= value;
+        }
+    }
+
+    public event Action OnWaitingForNextPlayer
+    {
+        add
+        {
+            _onWaitingForNextPlayer -= value;
+            _onWaitingForNextPlayer += value;
+        }
+        remove
+        {
+            _onWaitingForNextPlayer -= value;
+        }
+    }
+
     public void NextQuestion()
     {
         _currentCorrectAnswersCount = 0;
@@ -83,13 +163,13 @@ public class OpenDoorRound : GameRound
 
         _currentQuestionTeamIndex = GetNextTeamIndex(_roundTeamsPlayedIndeces, _currentQuestionTeamIndex);
 
-        if (_currentTeamIndex != -1)
+        _view.SetActiveTeam(_currentTeamIndex, false);
+
+        if (_currentQuestionTeamIndex != -1)
         {
-            ++_currentQuestionIndex;
-
-            // Show video/question
-
-            // Start timer
+            _currentTeamIndex = _currentQuestionTeamIndex;
+            _view.ClearAnswers();
+            _view.SetVideoUsed(_currentQuestionIndex);
         }
         else
         {
@@ -99,6 +179,13 @@ public class OpenDoorRound : GameRound
 
     public void StartTimer()
     {
+        _view.SetActiveTeam(_currentTeamIndex, true);
+        TimeManager.Instance.AddTimer(_timer);
+    }
+
+    private void StopTimer()
+    {
+        _view.SetActiveTeam(_currentTeamIndex, false);
         TimeManager.Instance.AddTimer(_timer);
     }
 
@@ -109,14 +196,15 @@ public class OpenDoorRound : GameRound
 
     private void EndQuestion()
     {
-        TimeManager.Instance.RemoveTimer(_timer);
+        StopTimer();
 
-        // Show result
+        _onWaitingForNextQuestion();
     }
 
     public void CorrectAnswer(int answerIndex)
     {
         // Show answer
+        _view.ShowAnswer(answerIndex, true);
 
         CurrentTeam.Time += CurrentQuestion.Answers[answerIndex].TimeReward;
 
@@ -127,9 +215,17 @@ public class OpenDoorRound : GameRound
         }
     }
 
+    public void ShowAnswer(int answerIndex)
+    {
+        _view.ShowAnswer(answerIndex, false);
+    }
+
     private int GetNextTeamIndex(List<int> teamsPlayed, int currentTeamIndex)
     {
-        teamsPlayed.Add(currentTeamIndex);
+        if (currentTeamIndex != -1)
+        {
+            teamsPlayed.Add(currentTeamIndex);
+        }
 
         if (teamsPlayed.Count == _teams.Length)
         {
@@ -162,5 +258,12 @@ public class OpenDoorRound : GameRound
         {
             EndQuestion();
         }
+    }
+
+    public void NextQuestion(int index)
+    {
+        _currentQuestionIndex = index;
+
+        _view.SetAnswers(CurrentQuestion.Question, CurrentQuestion.GetTimeRewards(), CurrentQuestion.GetAnswers());
     }
 }
