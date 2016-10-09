@@ -6,5 +6,5 @@ public abstract class GameRound
     {
         get;
     }
-    public abstract void Start(TeamData[] teams);
+    public abstract void Start(TeamData[] teams, Question[] questions);
 }

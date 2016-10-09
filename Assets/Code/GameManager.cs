@@ -3,20 +3,24 @@ using System.Collections;
 
 public static class GameManager 
 {
-    private static Round[] _rounds;
     private static TeamData[] _teams;
 
     private static int _currentRoundIndex = -1;
-    static GameRound _currentGameRound;
+    private static Game _game;
 
     private static Round CurrentRound
     {
-        get { return _rounds[_currentRoundIndex]; }
+        get { return _game.GetRound(_currentRoundIndex); }
     }
 
-    public static void Start(Round[] rounds, TeamData[] teams)
+    private static T[] GetCurrentRoundQuestions<T>() where T : Question
     {
-        _rounds = rounds;
+        return _game.GetQuestionsForRound<T>(_currentRoundIndex);
+    }
+
+    public static void Start(Game game, TeamData[] teams)
+    {
+        _game = game;
         _teams = teams;
 
         NextRound();
@@ -26,20 +30,26 @@ public static class GameManager
     {
         ++_currentRoundIndex;
 
+        Question[] questions = null;
+        GameRound currentGameRound = null;
+
         switch (CurrentRound)
         {
             case Round.ThreeSixNine:
-                _currentGameRound = new ThreeSixNineRound();
+                currentGameRound = new ThreeSixNineRound();
+                questions = GetCurrentRoundQuestions<ThreeSixNineQuestion>();
                 break;
             case Round.OpenDoor:
-                _currentGameRound = new OpenDoorRound();
+                currentGameRound = new OpenDoorRound();
+                questions = GetCurrentRoundQuestions<OpenDoorQuestion>();
                 break;
             case Round.Puzzle:
-                _currentGameRound = new PuzzleRound();
+                currentGameRound = new PuzzleRound();
+                questions = GetCurrentRoundQuestions<OpenDoorQuestion>();
                 break;
         }
 
-        SceneManager.Instance.Load(_currentGameRound.SceneName, () => _currentGameRound.Start(_teams));
+        SceneManager.Instance.Load(currentGameRound.SceneName, () => currentGameRound.Start(_teams, questions));
     }
 }
 

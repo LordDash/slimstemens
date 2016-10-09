@@ -4,158 +4,81 @@ using UnityEngine;
 
 public class PuzzleRound : GameRound
 {
-    private class PuzzleQuestion
-    {
-        public PuzzleAnswer[] Answers;
-
-        private int[][] _shuffledWordIndeces = null;
-        private string[] _shuffledWords = null;
-
-        public int[] GetTimeRewards()
-        {
-            int[] timeRewards = new int[Answers.Length];
-
-            for (int i = 0; i < Answers.Length; i++)
-            {
-                timeRewards[i] = Answers[i].TimeReward;
-            }
-
-            return timeRewards;
-        }
-
-        public string[] GetAnswers()
-        {
-            string[] answers = new string[Answers.Length];
-
-            for (int i = 0; i < Answers.Length; i++)
-            {
-                answers[i] = Answers[i].Answer;
-            }
-
-            return answers;
-        }
-
-        public string[] GetWords()
-        {
-            if (_shuffledWords == null)
-            {
-                _shuffledWords = new string[Answers.Length * Answers[0].Words.Length];
-                _shuffledWordIndeces = new int[Answers.Length][];
-
-                List<int> unusedIndeces = new List<int>(_shuffledWords.Length);
-
-                for (int i = 0; i < _shuffledWords.Length; i++)
-                {
-                    unusedIndeces.Add(i);
-                }
-
-                for (int answerIndex = 0; answerIndex < Answers.Length; answerIndex++)
-                {
-                    PuzzleAnswer answer = Answers[answerIndex];
-
-                    _shuffledWordIndeces[answerIndex] = new int[answer.Words.Length];
-
-                    for (int wordIndex = 0; wordIndex < answer.Words.Length; wordIndex++)
-                    {
-                        int index = unusedIndeces[UnityEngine.Random.Range(0, unusedIndeces.Count)];
-                        _shuffledWords[index] = answer.Words[wordIndex];
-                        _shuffledWordIndeces[answerIndex][wordIndex] = index;
-                        unusedIndeces.Remove(index);
-                    }
-                }
-            }
-
-            return _shuffledWords;
-        }
-
-        public int[] GetAnswerWordIndeces(int answerIndex)
-        {
-            return _shuffledWordIndeces[answerIndex];
-        }
-    }
-
-    private class PuzzleAnswer
-    {
-        public string[] Words;
-        public string Answer;
-        public int TimeReward;
-    }
-
-    private static readonly PuzzleQuestion[] Questions = new PuzzleQuestion[]
-        {
-            new PuzzleQuestion() { Answers =  new[] 
-                    {
-                        new PuzzleAnswer() { Answer = "Thomas", TimeReward = 30, Words = new [] 
-                                {
-                                    "Ijstaart",
-                                    "Knuffelbeer",
-                                    "Philips",
-                                    "Gele rugzak",
-                                } },
-                        new PuzzleAnswer() { Answer = "Dublin", TimeReward = 30, Words = new [] 
-                                {
-                                    "Stiletto",
-                                    "Stijn",
-                                    "Het Leven Zoals Het Is: De Zoo",
-                                    "Guinness",
-                                } },
-                        new PuzzleAnswer() { Answer = "Eerste Communie", TimeReward = 30, Words = new [] 
-                                {
-                                    "6 jaar",
-                                    "Lammetje",
-                                    "Lentefeest",
-                                    "Hostie",
-                                } },
-                    }},
-            new PuzzleQuestion() { Answers =  new[] 
-                    {
-                        new PuzzleAnswer() { Answer = "Google", TimeReward = 30, Words = new [] 
-                                {
-                                    "YouTube",
-                                    "Pixel",
-                                    "Allo",
-                                    "Hangouts",
-                                } },
-                        new PuzzleAnswer() { Answer = "Merijn", TimeReward = 30, Words = new [] 
-                                {
-                                    "Merel",
-                                    "Chiro",
-                                    "Basgitaar",
-                                    "Kattenfilmpjes",
-                                } },
-                        new PuzzleAnswer() { Answer = "Agalev", TimeReward = 30, Words = new [] 
-                                {
-                                    "Politieke partij",
-                                    "Anders Gaan Leven",
-                                    "Vogels",
-                                    "Groen",
-                                } },
-                    }},
-            new PuzzleQuestion() { Answers =  new[] 
-                    {
-                        new PuzzleAnswer() { Answer = "Straatje Zonde Einde", TimeReward = 30, Words = new [] 
-                                {
-                                    "Jeugdhuis",
-                                    "Lembeke",
-                                    "Tiny Mix Tapes",
-                                    "Gesloten",
-                                } },
-                        new PuzzleAnswer() { Answer = "College Onze Lieve Vrouw ten Doorn", TimeReward = 30, Words = new [] 
-                                {
-                                    "Eeklo",
-                                    "Rock Oasis",
-                                    "Mevrouw Martens",
-                                    "Fietsenstalling",
-                                } },
-                        new PuzzleAnswer() { Answer = "Sarah", TimeReward = 30, Words = new [] 
-                                {
-                                    "\"Ma Fack\"",
-                                    "Chocola",
-                                    "Sleidinge",
-                                    "3 September",
-                                } },
-                    }},
-        };
+    //private static readonly PuzzleQuestion[] Questions = new PuzzleQuestion[]
+    //    {
+    //        new PuzzleQuestion() { Answers =  new[] 
+    //                {
+    //                    new PuzzleAnswer() { Answer = "Thomas", TimeReward = 30, Words = new [] 
+    //                            {
+    //                                "Ijstaart",
+    //                                "Knuffelbeer",
+    //                                "Philips",
+    //                                "Gele rugzak",
+    //                            } },
+    //                    new PuzzleAnswer() { Answer = "Dublin", TimeReward = 30, Words = new [] 
+    //                            {
+    //                                "Stiletto",
+    //                                "Stijn",
+    //                                "Het Leven Zoals Het Is: De Zoo",
+    //                                "Guinness",
+    //                            } },
+    //                    new PuzzleAnswer() { Answer = "Eerste Communie", TimeReward = 30, Words = new [] 
+    //                            {
+    //                                "6 jaar",
+    //                                "Lammetje",
+    //                                "Lentefeest",
+    //                                "Hostie",
+    //                            } },
+    //                }},
+    //        new PuzzleQuestion() { Answers =  new[] 
+    //                {
+    //                    new PuzzleAnswer() { Answer = "Google", TimeReward = 30, Words = new [] 
+    //                            {
+    //                                "YouTube",
+    //                                "Pixel",
+    //                                "Allo",
+    //                                "Hangouts",
+    //                            } },
+    //                    new PuzzleAnswer() { Answer = "Merijn", TimeReward = 30, Words = new [] 
+    //                            {
+    //                                "Merel",
+    //                                "Chiro",
+    //                                "Basgitaar",
+    //                                "Kattenfilmpjes",
+    //                            } },
+    //                    new PuzzleAnswer() { Answer = "Agalev", TimeReward = 30, Words = new [] 
+    //                            {
+    //                                "Politieke partij",
+    //                                "Anders Gaan Leven",
+    //                                "Vogels",
+    //                                "Groen",
+    //                            } },
+    //                }},
+    //        new PuzzleQuestion() { Answers =  new[] 
+    //                {
+    //                    new PuzzleAnswer() { Answer = "Straatje Zonde Einde", TimeReward = 30, Words = new [] 
+    //                            {
+    //                                "Jeugdhuis",
+    //                                "Lembeke",
+    //                                "Tiny Mix Tapes",
+    //                                "Gesloten",
+    //                            } },
+    //                    new PuzzleAnswer() { Answer = "College Onze Lieve Vrouw ten Doorn", TimeReward = 30, Words = new [] 
+    //                            {
+    //                                "Eeklo",
+    //                                "Rock Oasis",
+    //                                "Mevrouw Martens",
+    //                                "Fietsenstalling",
+    //                            } },
+    //                    new PuzzleAnswer() { Answer = "Sarah", TimeReward = 30, Words = new [] 
+    //                            {
+    //                                "\"Ma Fack\"",
+    //                                "Chocola",
+    //                                "Sleidinge",
+    //                                "3 September",
+    //                            } },
+    //                }},
+    //    };
 
     private TeamData[] _teams;
     private int _currentQuestionIndex;
@@ -173,6 +96,7 @@ public class PuzzleRound : GameRound
 
     private Action _onWaitingForNextQuestion = () => { };
     private Action _onWaitingForNextPlayer = () => { };
+    private PuzzleQuestion[] _questions;
 
     public event Action OnWaitingForNextQuestionPrompt
     {
@@ -207,12 +131,13 @@ public class PuzzleRound : GameRound
 
     private PuzzleQuestion CurrentQuestion
     {
-        get{ return Questions[_currentQuestionIndex]; }
+        get{ return _questions[_currentQuestionIndex]; }
     }
 
     #region implemented abstract members of GameRound
-    public override void Start(TeamData[] teams)
+    public override void Start(TeamData[] teams, Question[] questions)
     {
+        _questions = questions as PuzzleQuestion[];
         _currentQuestionIndex = -1;
         _currentQuestionTeamIndex = -1;
         _currentTeamIndex = -1;

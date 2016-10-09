@@ -4,64 +4,53 @@ using UnityEngine;
 
 public class GalleryRound : GameRound
 {
-    private class GalleryQuestion
-    {
-        public GalleryAnswer[] Answers;
-    }
-
-    private class GalleryAnswer
-    {
-        public string ImageFileName;
-        public string Answer;
-        public int TimeReward;
-    }
-
-    private static readonly GalleryQuestion[] Questions = new GalleryQuestion[]
-        {
-            new GalleryQuestion() { Answers =  new[] 
-                    {
-                        new GalleryAnswer() { ImageFileName = "Image01", Answer = "Antwoord 1", TimeReward = 15 },
-                        new GalleryAnswer() { ImageFileName = "Image02", Answer = "Antwoord 2", TimeReward = 15 },
-                        new GalleryAnswer() { ImageFileName = "Image03", Answer = "Antwoord 3", TimeReward = 15 },
-                        new GalleryAnswer() { ImageFileName = "Image04", Answer = "Antwoord 4", TimeReward = 15 },
-                        new GalleryAnswer() { ImageFileName = "Image05", Answer = "Antwoord 5", TimeReward = 15 },
-                        new GalleryAnswer() { ImageFileName = "Image06", Answer = "Antwoord 6", TimeReward = 15 },
-                        new GalleryAnswer() { ImageFileName = "Image07", Answer = "Antwoord 7", TimeReward = 15 },
-                        new GalleryAnswer() { ImageFileName = "Image08", Answer = "Antwoord 8", TimeReward = 15 },
-                        new GalleryAnswer() { ImageFileName = "Image09", Answer = "Antwoord 9", TimeReward = 15 },
-                        new GalleryAnswer() { ImageFileName = "Image10", Answer = "Antwoord 10", TimeReward = 15 },
-                    }},
-            new GalleryQuestion() { Answers =  new[] 
-                    {
-                        new GalleryAnswer() { ImageFileName = "Image01", Answer = "Antwoord 1", TimeReward = 15 },
-                        new GalleryAnswer() { ImageFileName = "Image02", Answer = "Antwoord 2", TimeReward = 15 },
-                        new GalleryAnswer() { ImageFileName = "Image03", Answer = "Antwoord 3", TimeReward = 15 },
-                        new GalleryAnswer() { ImageFileName = "Image04", Answer = "Antwoord 4", TimeReward = 15 },
-                        new GalleryAnswer() { ImageFileName = "Image05", Answer = "Antwoord 5", TimeReward = 15 },
-                        new GalleryAnswer() { ImageFileName = "Image06", Answer = "Antwoord 6", TimeReward = 15 },
-                        new GalleryAnswer() { ImageFileName = "Image07", Answer = "Antwoord 7", TimeReward = 15 },
-                        new GalleryAnswer() { ImageFileName = "Image08", Answer = "Antwoord 8", TimeReward = 15 },
-                        new GalleryAnswer() { ImageFileName = "Image09", Answer = "Antwoord 9", TimeReward = 15 },
-                        new GalleryAnswer() { ImageFileName = "Image10", Answer = "Antwoord 10", TimeReward = 15 },
-                    }},
-            new GalleryQuestion() { Answers =  new[] 
-                    {
-                        new GalleryAnswer() { ImageFileName = "Image01", Answer = "Antwoord 1", TimeReward = 15 },
-                        new GalleryAnswer() { ImageFileName = "Image02", Answer = "Antwoord 2", TimeReward = 15 },
-                        new GalleryAnswer() { ImageFileName = "Image03", Answer = "Antwoord 3", TimeReward = 15 },
-                        new GalleryAnswer() { ImageFileName = "Image04", Answer = "Antwoord 4", TimeReward = 15 },
-                        new GalleryAnswer() { ImageFileName = "Image05", Answer = "Antwoord 5", TimeReward = 15 },
-                        new GalleryAnswer() { ImageFileName = "Image06", Answer = "Antwoord 6", TimeReward = 15 },
-                        new GalleryAnswer() { ImageFileName = "Image07", Answer = "Antwoord 7", TimeReward = 15 },
-                        new GalleryAnswer() { ImageFileName = "Image08", Answer = "Antwoord 8", TimeReward = 15 },
-                        new GalleryAnswer() { ImageFileName = "Image09", Answer = "Antwoord 9", TimeReward = 15 },
-                        new GalleryAnswer() { ImageFileName = "Image10", Answer = "Antwoord 10", TimeReward = 15 },
-                    }},
-        };
+    //private static readonly GalleryQuestion[] Questions = new GalleryQuestion[]
+    //    {
+    //        new GalleryQuestion() { Answers =  new[] 
+    //                {
+    //                    new GalleryAnswer() { ImageFileName = "Image01", Answer = "Antwoord 1", TimeReward = 15 },
+    //                    new GalleryAnswer() { ImageFileName = "Image02", Answer = "Antwoord 2", TimeReward = 15 },
+    //                    new GalleryAnswer() { ImageFileName = "Image03", Answer = "Antwoord 3", TimeReward = 15 },
+    //                    new GalleryAnswer() { ImageFileName = "Image04", Answer = "Antwoord 4", TimeReward = 15 },
+    //                    new GalleryAnswer() { ImageFileName = "Image05", Answer = "Antwoord 5", TimeReward = 15 },
+    //                    new GalleryAnswer() { ImageFileName = "Image06", Answer = "Antwoord 6", TimeReward = 15 },
+    //                    new GalleryAnswer() { ImageFileName = "Image07", Answer = "Antwoord 7", TimeReward = 15 },
+    //                    new GalleryAnswer() { ImageFileName = "Image08", Answer = "Antwoord 8", TimeReward = 15 },
+    //                    new GalleryAnswer() { ImageFileName = "Image09", Answer = "Antwoord 9", TimeReward = 15 },
+    //                    new GalleryAnswer() { ImageFileName = "Image10", Answer = "Antwoord 10", TimeReward = 15 },
+    //                }},
+    //        new GalleryQuestion() { Answers =  new[] 
+    //                {
+    //                    new GalleryAnswer() { ImageFileName = "Image01", Answer = "Antwoord 1", TimeReward = 15 },
+    //                    new GalleryAnswer() { ImageFileName = "Image02", Answer = "Antwoord 2", TimeReward = 15 },
+    //                    new GalleryAnswer() { ImageFileName = "Image03", Answer = "Antwoord 3", TimeReward = 15 },
+    //                    new GalleryAnswer() { ImageFileName = "Image04", Answer = "Antwoord 4", TimeReward = 15 },
+    //                    new GalleryAnswer() { ImageFileName = "Image05", Answer = "Antwoord 5", TimeReward = 15 },
+    //                    new GalleryAnswer() { ImageFileName = "Image06", Answer = "Antwoord 6", TimeReward = 15 },
+    //                    new GalleryAnswer() { ImageFileName = "Image07", Answer = "Antwoord 7", TimeReward = 15 },
+    //                    new GalleryAnswer() { ImageFileName = "Image08", Answer = "Antwoord 8", TimeReward = 15 },
+    //                    new GalleryAnswer() { ImageFileName = "Image09", Answer = "Antwoord 9", TimeReward = 15 },
+    //                    new GalleryAnswer() { ImageFileName = "Image10", Answer = "Antwoord 10", TimeReward = 15 },
+    //                }},
+    //        new GalleryQuestion() { Answers =  new[] 
+    //                {
+    //                    new GalleryAnswer() { ImageFileName = "Image01", Answer = "Antwoord 1", TimeReward = 15 },
+    //                    new GalleryAnswer() { ImageFileName = "Image02", Answer = "Antwoord 2", TimeReward = 15 },
+    //                    new GalleryAnswer() { ImageFileName = "Image03", Answer = "Antwoord 3", TimeReward = 15 },
+    //                    new GalleryAnswer() { ImageFileName = "Image04", Answer = "Antwoord 4", TimeReward = 15 },
+    //                    new GalleryAnswer() { ImageFileName = "Image05", Answer = "Antwoord 5", TimeReward = 15 },
+    //                    new GalleryAnswer() { ImageFileName = "Image06", Answer = "Antwoord 6", TimeReward = 15 },
+    //                    new GalleryAnswer() { ImageFileName = "Image07", Answer = "Antwoord 7", TimeReward = 15 },
+    //                    new GalleryAnswer() { ImageFileName = "Image08", Answer = "Antwoord 8", TimeReward = 15 },
+    //                    new GalleryAnswer() { ImageFileName = "Image09", Answer = "Antwoord 9", TimeReward = 15 },
+    //                    new GalleryAnswer() { ImageFileName = "Image10", Answer = "Antwoord 10", TimeReward = 15 },
+    //                }},
+    //    };
 
     #region implemented abstract members of GameRound
-    public override void Start(TeamData[] teams)
+    public override void Start(TeamData[] teams, Question[] questions)
     {
+        _questions = questions as GalleryQuestion[];
         _currentQuestionIndex = 0;
         _teams = teams;
         _roundTeamsPlayedIndeces = new List<int>(_teams.Length);
@@ -91,6 +80,7 @@ public class GalleryRound : GameRound
     private List<int> _roundTeamsPlayedIndeces;
 
     private Action<float> _timer;
+    private GalleryQuestion[] _questions;
 
     private TeamData CurrentTeam
     {
@@ -99,7 +89,7 @@ public class GalleryRound : GameRound
 
     private GalleryQuestion CurrentQuestion
     {
-        get{ return Questions[_currentQuestionIndex]; }
+        get{ return _questions[_currentQuestionIndex]; }
     }
 
     public void NextQuestion()

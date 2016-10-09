@@ -5,24 +5,24 @@ using System;
 
 public class ThreeSixNineRound : GameRound
 {
-    private static readonly ThreeSixNineQuestion[] Questions = new ThreeSixNineQuestion[]
-        {
-            new ThreeSixNineQuestion() { Question = "Wie antwoorde op de vragenlijst dat hij/zij geboren is in het jaar 198?", Answer = "Jeroen", TimeReward = 0 },
-            new ThreeSixNineQuestion() { Question = "Vraag 2", Answer = "Antwoord 2", TimeReward = 0 },
-            new ThreeSixNineQuestion() { Question = "Vraag 3", Answer = "Antwoord 3", TimeReward = 10 },
-            new ThreeSixNineQuestion() { Question = "Vraag 4", Answer = "Antwoord 4", TimeReward = 0 },
-            new ThreeSixNineQuestion() { Question = "Vraag 5", Answer = "Antwoord 5", TimeReward = 0 },
-            new ThreeSixNineQuestion() { Question = "Vraag 6", Answer = "Antwoord 6", TimeReward = 10 },
-            new ThreeSixNineQuestion() { Question = "Vraag 7", Answer = "Antwoord 7", TimeReward = 0 },
-            new ThreeSixNineQuestion() { Question = "Vraag 8", Answer = "Antwoord 8", TimeReward = 0 },
-            new ThreeSixNineQuestion() { Question = "Vraag 9", Answer = "Antwoord 9", TimeReward = 10 },
-            new ThreeSixNineQuestion() { Question = "Vraag 10", Answer = "Antwoord 10", TimeReward = 0 },
-            new ThreeSixNineQuestion() { Question = "Vraag 11", Answer = "Antwoord 11", TimeReward = 0 },
-            new ThreeSixNineQuestion() { Question = "Vraag 12", Answer = "Antwoord 12", TimeReward = 10 },
-            new ThreeSixNineQuestion() { Question = "Vraag 13", Answer = "Antwoord 13", TimeReward = 0 },
-            new ThreeSixNineQuestion() { Question = "Vraag 14", Answer = "Antwoord 14", TimeReward = 0 },
-            new ThreeSixNineQuestion() { Question = "Vraag 15", Answer = "Antwoord 15", TimeReward = 10 },
-        };
+    //private static readonly ThreeSixNineQuestion[] Questions = new ThreeSixNineQuestion[]
+    //    {
+    //        new ThreeSixNineQuestion() { Question = "Wie antwoorde op de vragenlijst dat hij/zij geboren is in het jaar 198?", Answer = "Jeroen", TimeReward = 0 },
+    //        new ThreeSixNineQuestion() { Question = "Vraag 2", Answer = "Antwoord 2", TimeReward = 0 },
+    //        new ThreeSixNineQuestion() { Question = "Vraag 3", Answer = "Antwoord 3", TimeReward = 10 },
+    //        new ThreeSixNineQuestion() { Question = "Vraag 4", Answer = "Antwoord 4", TimeReward = 0 },
+    //        new ThreeSixNineQuestion() { Question = "Vraag 5", Answer = "Antwoord 5", TimeReward = 0 },
+    //        new ThreeSixNineQuestion() { Question = "Vraag 6", Answer = "Antwoord 6", TimeReward = 10 },
+    //        new ThreeSixNineQuestion() { Question = "Vraag 7", Answer = "Antwoord 7", TimeReward = 0 },
+    //        new ThreeSixNineQuestion() { Question = "Vraag 8", Answer = "Antwoord 8", TimeReward = 0 },
+    //        new ThreeSixNineQuestion() { Question = "Vraag 9", Answer = "Antwoord 9", TimeReward = 10 },
+    //        new ThreeSixNineQuestion() { Question = "Vraag 10", Answer = "Antwoord 10", TimeReward = 0 },
+    //        new ThreeSixNineQuestion() { Question = "Vraag 11", Answer = "Antwoord 11", TimeReward = 0 },
+    //        new ThreeSixNineQuestion() { Question = "Vraag 12", Answer = "Antwoord 12", TimeReward = 10 },
+    //        new ThreeSixNineQuestion() { Question = "Vraag 13", Answer = "Antwoord 13", TimeReward = 0 },
+    //        new ThreeSixNineQuestion() { Question = "Vraag 14", Answer = "Antwoord 14", TimeReward = 0 },
+    //        new ThreeSixNineQuestion() { Question = "Vraag 15", Answer = "Antwoord 15", TimeReward = 10 },
+    //    };
 
     private Action _onWaitingForNextQuestion = () => { };
 
@@ -39,12 +39,14 @@ public class ThreeSixNineRound : GameRound
         }
     }
 
+    private ThreeSixNineQuestion[] _questions;
     private TeamData[] _teams;
     private int _currentQuestionIndex;
     private int _currentTeamIndex;
     private List<int> _currentQuestionTeamsPlayedIndeces = new List<int>();
 
     private ThreeSixNineViewController _view;
+    
 
     private TeamData CurrentTeam
     {
@@ -53,14 +55,15 @@ public class ThreeSixNineRound : GameRound
 
     private ThreeSixNineQuestion CurrentQuestion
     {
-        get { return Questions[_currentQuestionIndex]; }
+        get { return _questions[_currentQuestionIndex]; }
     }
 
     #region implemented abstract members of GameRound
 
-    public override void Start(TeamData[] teams)
+    public override void Start(TeamData[] teams, Question[] questions)
     {
         Debug.LogFormat("[ThreeSixNine] Start round");
+        _questions = questions as ThreeSixNineQuestion[];
         _teams = teams;
         _currentQuestionIndex = -1;
         _currentTeamIndex = 0;
@@ -88,7 +91,7 @@ public class ThreeSixNineRound : GameRound
     {
         ++_currentQuestionIndex;
 
-        if(_currentQuestionIndex < Questions.Length)
+        if(_currentQuestionIndex < _questions.Length)
         {
             Debug.LogFormat("[ThreeSixNine] Next question\n{0}", CurrentQuestion.ToString());
             _view.SetQuestion(_currentQuestionIndex, CurrentQuestion.Question, CurrentQuestion.Answer);
@@ -131,17 +134,5 @@ public class ThreeSixNineRound : GameRound
         }
 
         Debug.LogFormat("[ThreeSixNine] Answer wrong, {0}'s turn", CurrentTeam.Name);
-    }
-}
-
-public class ThreeSixNineQuestion
-{
-    public string Question;
-    public string Answer;
-    public int TimeReward;
-
-    public override string ToString()
-    {
-        return string.Format("{0} [A: {1}] [{2}]", Question, Answer, TimeReward);
     }
 }

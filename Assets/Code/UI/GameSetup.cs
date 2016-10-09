@@ -7,6 +7,9 @@ public class GameSetup : MonoBehaviour
     [SerializeField]
     private UnityEngine.UI.Button _startButton;
 
+    [SerializeField]
+    private TextAsset gameFile;
+
     private void Awake()
     {
 #if !UNITY_EDITOR
@@ -22,6 +25,8 @@ public class GameSetup : MonoBehaviour
 
     private void StartNewGame()
     {
-        GameManager.Start(new[] { Round.ThreeSixNine, Round.Puzzle }, new[] { new TeamData() { Name = "Stijn", Time = 60 }, new TeamData() { Name = "Dave", Time = 60 }, new TeamData() { Name = "Kim", Time = 60 } });
+        Game game = JsonUtility.FromJson<Game>(gameFile.text);
+
+        GameManager.Start(game, new[] { new TeamData() { Name = "Stijn", Time = 60 }, new TeamData() { Name = "Dave", Time = 60 }, new TeamData() { Name = "Kim", Time = 60 } });
     }
 }

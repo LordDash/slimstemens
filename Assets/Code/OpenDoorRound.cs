@@ -4,48 +4,36 @@ using UnityEngine;
 
 public class OpenDoorRound : GameRound
 {
-    private class OpenDoorQuestion
-    {
-        public string Question;
-        public string QuestionFileName;
-        public OpenDoorAnswer[] Answers;
-    }
-
-    private class OpenDoorAnswer
-    {
-        public string Answer;
-        public int TimeReward;
-    }
-
-    private static readonly OpenDoorQuestion[] Questions = new OpenDoorQuestion[]
-        {
-            new OpenDoorQuestion() { Question = "Vraag 1", QuestionFileName = "OpenDoor01", Answers =  new[] 
-                    {
-                        new OpenDoorAnswer() { Answer = "Antwoord 1", TimeReward = 20 },
-                        new OpenDoorAnswer() { Answer = "Antwoord 2", TimeReward = 20 },
-                        new OpenDoorAnswer() { Answer = "Antwoord 3", TimeReward = 20 },
-                        new OpenDoorAnswer() { Answer = "Antwoord 4", TimeReward = 20 },
-                    }},
-            new OpenDoorQuestion() { Question = "Vraag 2", QuestionFileName = "OpenDoor02", Answers =  new[] 
-                    {
-                        new OpenDoorAnswer() { Answer = "Antwoord 1", TimeReward = 20 },
-                        new OpenDoorAnswer() { Answer = "Antwoord 2", TimeReward = 20 },
-                        new OpenDoorAnswer() { Answer = "Antwoord 3", TimeReward = 20 },
-                        new OpenDoorAnswer() { Answer = "Antwoord 4", TimeReward = 20 },
-                    }},
-            new OpenDoorQuestion() { Question = "Vraag 3", QuestionFileName = "OpenDoor03", Answers =  new[] 
-                    {
-                        new OpenDoorAnswer() { Answer = "Antwoord 1", TimeReward = 20 },
-                        new OpenDoorAnswer() { Answer = "Antwoord 2", TimeReward = 20 },
-                        new OpenDoorAnswer() { Answer = "Antwoord 3", TimeReward = 20 },
-                        new OpenDoorAnswer() { Answer = "Antwoord 4", TimeReward = 20 },
-                    }},
-        };
+    //private static readonly OpenDoorQuestion[] Questions = new OpenDoorQuestion[]
+    //    {
+    //        new OpenDoorQuestion() { Question = "Vraag 1", QuestionFileName = "OpenDoor01", Answers =  new[] 
+    //                {
+    //                    new OpenDoorAnswer() { Answer = "Antwoord 1", TimeReward = 20 },
+    //                    new OpenDoorAnswer() { Answer = "Antwoord 2", TimeReward = 20 },
+    //                    new OpenDoorAnswer() { Answer = "Antwoord 3", TimeReward = 20 },
+    //                    new OpenDoorAnswer() { Answer = "Antwoord 4", TimeReward = 20 },
+    //                }},
+    //        new OpenDoorQuestion() { Question = "Vraag 2", QuestionFileName = "OpenDoor02", Answers =  new[] 
+    //                {
+    //                    new OpenDoorAnswer() { Answer = "Antwoord 1", TimeReward = 20 },
+    //                    new OpenDoorAnswer() { Answer = "Antwoord 2", TimeReward = 20 },
+    //                    new OpenDoorAnswer() { Answer = "Antwoord 3", TimeReward = 20 },
+    //                    new OpenDoorAnswer() { Answer = "Antwoord 4", TimeReward = 20 },
+    //                }},
+    //        new OpenDoorQuestion() { Question = "Vraag 3", QuestionFileName = "OpenDoor03", Answers =  new[] 
+    //                {
+    //                    new OpenDoorAnswer() { Answer = "Antwoord 1", TimeReward = 20 },
+    //                    new OpenDoorAnswer() { Answer = "Antwoord 2", TimeReward = 20 },
+    //                    new OpenDoorAnswer() { Answer = "Antwoord 3", TimeReward = 20 },
+    //                    new OpenDoorAnswer() { Answer = "Antwoord 4", TimeReward = 20 },
+    //                }},
+    //    };
 
     #region implemented abstract members of GameRound
 
-    public override void Start(TeamData[] teams)
+    public override void Start(TeamData[] teams, Question[] questions)
     {
+        _questions = questions as OpenDoorQuestion[];
         _currentQuestionIndex = 0;
         _teams = teams;
         _roundTeamsPlayedIndeces = new List<int>(_teams.Length);
@@ -76,6 +64,7 @@ public class OpenDoorRound : GameRound
     private List<int> _roundTeamsPlayedIndeces;
 
     private Action<float> _timer;
+    private OpenDoorQuestion[] _questions;
 
     private TeamData CurrentTeam
     {
@@ -84,7 +73,7 @@ public class OpenDoorRound : GameRound
 
     private OpenDoorQuestion CurrentQuestion
     {
-        get{ return Questions[_currentQuestionIndex]; }
+        get{ return _questions[_currentQuestionIndex]; }
     }
 
     public void NextQuestion()
