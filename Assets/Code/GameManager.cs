@@ -54,6 +54,9 @@ public static class GameManager
             case Round.Bonus:
                 currentGameRound = new BonusRound();
                 break;
+            case Round.Done:
+                currentGameRound = new DoneRound();
+                break;
         }
 
         SceneManager.Instance.Load(currentGameRound.SceneName, () => currentGameRound.Start(_teams, questions));

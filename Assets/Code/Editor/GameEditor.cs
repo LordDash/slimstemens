@@ -180,6 +180,11 @@ public class GameEditor : EditorWindow
 
                     _questionCollapsed[i] = new Dictionary<int, bool>();
 
+                    if (questions == null)
+                    {
+                        continue;
+                    }
+
                     for (int j = 0; j < questions.Length; j++)
                     {
                         _questionCollapsed[i][j] = true;
@@ -196,6 +201,11 @@ public class GameEditor : EditorWindow
                     Question[] questions = _game.GetQuestionsForRound<Question>(i);
 
                     _questionCollapsed[i] = new Dictionary<int, bool>();
+
+                    if (questions == null)
+                    {
+                        continue;
+                    }
 
                     for (int j = 0; j < questions.Length; j++)
                     {
@@ -230,6 +240,9 @@ public class GameEditor : EditorWindow
                         break;
                     case Round.Bonus:
                         DrawBonus(i);
+                        break;
+                    case Round.Done:
+                        DrawDone(i);
                         break;
                 }
             }
@@ -320,6 +333,9 @@ public class GameEditor : EditorWindow
                     case Round.Bonus:
                         _game.AddRound<Question>(_roundToAdd, null);
                         break;
+                    case Round.Done:
+                        _game.AddRound<Question>(_roundToAdd, null);
+                        break;
                 }
 
                 
@@ -333,6 +349,25 @@ public class GameEditor : EditorWindow
             SetGameDirty();
             _roundIndexToRemove = -1;
         }
+    }
+
+    private void DrawDone(int roundIndex)
+    {
+        EditorGUILayout.BeginHorizontal();
+        {
+            if (GUILayout.Button("x", GUILayout.Width(20)))
+            {
+                if (EditorUtility.DisplayDialog("Delete round", "Are you sure you want to delete this round?", "Delete", "Cancel"))
+                {
+                    _roundIndexToRemove = roundIndex;
+                }
+            }
+
+            EditorGUILayout.LabelField("", GUILayout.Width(20));
+
+            EditorGUILayout.LabelField("The End", EditorStyles.boldLabel);
+        }
+        EditorGUILayout.EndHorizontal();
     }
 
     private void DrawBonus(int roundIndex)
@@ -407,7 +442,7 @@ public class GameEditor : EditorWindow
                             _questionCollapsed[roundIndex][i] = !questionCollapsed;
                         }
 
-                        EditorGUILayout.LabelField("Gallery" + (i + 1) + (questionCollapsed ? string.Format(" ({0})", questions[i].Answers.Length) : ""));
+                        EditorGUILayout.LabelField("Gallery " + (i + 1) + (questionCollapsed ? string.Format(" ({0})", questions[i].Answers.Length) : ""));
                     }
                     EditorGUILayout.EndHorizontal();
 

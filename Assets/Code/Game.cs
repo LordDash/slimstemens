@@ -83,9 +83,9 @@ public class Game
         }
 
         _roundQuestionsContainers[roundIndex] = questionContainer;
-        _roundQuestions[roundIndex] = questionContainer.Questions;
+        _roundQuestions[roundIndex] = questionContainer != null ? questionContainer.Questions : null;
 
-        return questionContainer.Questions;
+        return questionContainer != null ? questionContainer.Questions : null;
     }
 
     public string Save()
