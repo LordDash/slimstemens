@@ -51,6 +51,9 @@ public static class GameManager
                 currentGameRound = new GalleryRound();
                 questions = GetCurrentRoundQuestions<GalleryQuestion>();
                 break;
+            case Round.Bonus:
+                currentGameRound = new BonusRound();
+                break;
         }
 
         SceneManager.Instance.Load(currentGameRound.SceneName, () => currentGameRound.Start(_teams, questions));
@@ -73,6 +76,5 @@ public enum Round
     CollectiveMemory,
     Final,
     Bonus,
-    Done,
-    Result
+    Done
 }

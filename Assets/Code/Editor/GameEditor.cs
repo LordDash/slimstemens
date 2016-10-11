@@ -228,6 +228,9 @@ public class GameEditor : EditorWindow
                     case Round.Gallery:
                         DrawGallery(i);
                         break;
+                    case Round.Bonus:
+                        DrawBonus(i);
+                        break;
                 }
             }
 
@@ -314,6 +317,9 @@ public class GameEditor : EditorWindow
 
                         _game.AddRound(_roundToAdd, galleryContainer);
                         break;
+                    case Round.Bonus:
+                        _game.AddRound<Question>(_roundToAdd, null);
+                        break;
                 }
 
                 
@@ -327,6 +333,25 @@ public class GameEditor : EditorWindow
             SetGameDirty();
             _roundIndexToRemove = -1;
         }
+    }
+
+    private void DrawBonus(int roundIndex)
+    {
+        EditorGUILayout.BeginHorizontal();
+        {
+            if (GUILayout.Button("x", GUILayout.Width(20)))
+            {
+                if (EditorUtility.DisplayDialog("Delete round", "Are you sure you want to delete this round?", "Delete", "Cancel"))
+                {
+                    _roundIndexToRemove = roundIndex;
+                }
+            }
+
+            EditorGUILayout.LabelField("", GUILayout.Width(20));
+
+            EditorGUILayout.LabelField("Bonus", EditorStyles.boldLabel);
+        }
+        EditorGUILayout.EndHorizontal();
     }
 
     private void DrawGallery(int roundIndex)
