@@ -19,6 +19,7 @@ public class OpenDoorView : MonoBehaviour
 
     [SerializeField]
     private Animator[] _videoPlayersAnimators;
+    private int _currentVideoIndex;
 
     public virtual void SetTeamData(TeamData[] teams)
     {
@@ -79,5 +80,19 @@ public class OpenDoorView : MonoBehaviour
     {
         _videosAnimator.SetInteger(VideoHash, questionIndex);
         _videoPlayers[questionIndex].Play();
+
+        _currentVideoIndex = questionIndex;
+    }
+
+    public virtual void StopCurrentVideo()
+    {
+        if (_currentVideoIndex != -1)
+        {
+            _videoPlayersAnimators[_currentVideoIndex].SetBool(UsedHash, true);
+            _videosAnimator.SetInteger(VideoHash, -1);
+            _videoPlayers[_currentVideoIndex].Stop();
+        }
+
+        _currentVideoIndex = -1;
     }
 }

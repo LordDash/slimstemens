@@ -84,6 +84,8 @@ public class OpenDoorViewController : OpenDoorView
         _playerPassedButton.interactable = true;
         _questionCanvas.interactable = false;
         _nextQuestionButton.interactable = false;
+
+        StopCurrentVideo();
     }
 
     private void SetStateToWaitingForNextQuestion()
@@ -168,5 +170,10 @@ public class OpenDoorViewController : OpenDoorView
         base.SetVideoUsed(questionIndex);
 
         _playerView.SetVideoUsed(questionIndex);
+    }
+
+    public override void StopCurrentVideo()
+    {
+        _playerView.StopCurrentVideo();
     }
 }
