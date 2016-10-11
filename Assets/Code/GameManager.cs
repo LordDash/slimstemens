@@ -45,7 +45,11 @@ public static class GameManager
                 break;
             case Round.Puzzle:
                 currentGameRound = new PuzzleRound();
-                questions = GetCurrentRoundQuestions<OpenDoorQuestion>();
+                questions = GetCurrentRoundQuestions<PuzzleQuestion>();
+                break;
+            case Round.Gallery:
+                currentGameRound = new GalleryRound();
+                questions = GetCurrentRoundQuestions<GalleryQuestion>();
                 break;
         }
 

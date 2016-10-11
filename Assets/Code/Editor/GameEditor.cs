@@ -225,6 +225,9 @@ public class GameEditor : EditorWindow
                     case Round.OpenDoor:
                         DrawOpenDoor(i);
                         break;
+                    case Round.Gallery:
+                        DrawGallery(i);
+                        break;
                 }
             }
 
@@ -293,6 +296,24 @@ public class GameEditor : EditorWindow
 
                         _game.AddRound(_roundToAdd, openDoorContainer);
                         break;
+                    case Round.Gallery:
+                        GalleryQuestion[] galleryQuestions = new GalleryQuestion[3];
+                        for (int i = 0; i < galleryQuestions.Length; i++)
+                        {
+                            galleryQuestions[i] = new GalleryQuestion();
+                            galleryQuestions[i].Answers = new GalleryAnswer[10];
+
+                            for (int j = 0; j < galleryQuestions[i].Answers.Length; j++)
+                            {
+                                galleryQuestions[i].Answers[j] = new GalleryAnswer();
+                            }
+                        }
+
+                        QuestionContainer<GalleryQuestion> galleryContainer = new QuestionContainer<GalleryQuestion>();
+                        galleryContainer.Questions = galleryQuestions;
+
+                        _game.AddRound(_roundToAdd, galleryContainer);
+                        break;
                 }
 
                 
@@ -307,6 +328,135 @@ public class GameEditor : EditorWindow
             _roundIndexToRemove = -1;
         }
     }
+
+    private void DrawGallery(int roundIndex)
+    {
+        bool collapsed;
+        _roundCollapsed.TryGetValue(roundIndex, out collapsed);
+
+        GalleryQuestion[] questions = _game.GetQuestionsForRound<GalleryQuestion>(roundIndex);
+
+        EditorGUILayout.BeginHorizontal();
+        {
+            if (GUILayout.Button("x", GUILayout.Width(20)))
+            {
+                if (EditorUtility.DisplayDialog("Delete round", "Are you sure you want to delete this round?", "Delete", "Cancel"))
+                {
+                    _roundIndexToRemove = roundIndex;
+                }
+            }
+
+            if (GUILayout.Button(collapsed ? "▼" : "▲", GUILayout.Width(20)))
+            {
+                _roundCollapsed[roundIndex] = !collapsed;
+            }
+
+            EditorGUILayout.LabelField("Gallery" + (collapsed ? string.Format(" ({0})", questions.Length) : ""), EditorStyles.boldLabel);
+        }
+        EditorGUILayout.EndHorizontal();
+
+        if (collapsed)
+        {
+            return;
+        }
+
+        EditorGUILayout.BeginHorizontal();
+        {
+            EditorGUILayout.LabelField("", GUILayout.Width(40));
+
+            EditorGUILayout.BeginVertical();
+            {
+                for (int i = 0; i < questions.Length; i++)
+                {
+                    bool questionCollapsed;
+                    if (_questionCollapsed.ContainsKey(roundIndex) == false)
+                    {
+                        _questionCollapsed[roundIndex] = new Dictionary<int, bool>();
+                    }
+                    _questionCollapsed[roundIndex].TryGetValue(i, out questionCollapsed);
+
+                    EditorGUILayout.BeginHorizontal();
+                    {
+                        if (GUILayout.Button(questionCollapsed ? "▼" : "▲", GUILayout.Width(20)))
+                        {
+                            _questionCollapsed[roundIndex][i] = !questionCollapsed;
+                        }
+
+                        EditorGUILayout.LabelField("Gallery" + (i + 1) + (questionCollapsed ? string.Format(" ({0})", questions[i].Answers.Length) : ""));
+                    }
+                    EditorGUILayout.EndHorizontal();
+
+                    if (questionCollapsed)
+                    {
+                        continue;
+                    }
+
+                    
+
+                    EditorGUILayout.BeginHorizontal();
+                    {
+                        EditorGUILayout.LabelField("Question Image", GUILayout.Width(150));
+                        EditorGUILayout.LabelField("Question Image Original", GUILayout.Width(150));
+                        EditorGUILayout.LabelField("Answer");
+                        EditorGUILayout.LabelField("Time Reward", GUILayout.Width(80));
+                    }
+                    EditorGUILayout.EndHorizontal();
+
+                    for (int j = 0; j < questions[i].Answers.Length; j++)
+                    {
+                        EditorGUILayout.BeginHorizontal();
+                        {
+                            Sprite image = AssetDatabase.LoadAssetAtPath<Sprite>(questions[i].Answers[j].ImageFileName);
+                            Sprite newImage = EditorGUILayout.ObjectField(image, typeof(Sprite), false, GUILayout.Width(150)) as Sprite;
+
+                            if (image != newImage)
+                            {
+                                if (newImage == null)
+                                {
+                                    questions[i].Answers[j].ImageFileName = "";
+                                }
+                                else
+                                {
+                                    questions[i].Answers[j].ImageFileName = AssetDatabase.GetAssetPath(newImage);
+                                }
+
+                                SetGameDirty();
+                            }
+
+                            Sprite imageOriginal = AssetDatabase.LoadAssetAtPath<Sprite>(questions[i].Answers[j].ImageOriginalFileName);
+                            Sprite newImageOriginal = EditorGUILayout.ObjectField(imageOriginal, typeof(Sprite), false, GUILayout.Width(150)) as Sprite;
+
+                            if (imageOriginal != newImageOriginal)
+                            {
+                                if (newImageOriginal == null)
+                                {
+                                    questions[i].Answers[j].ImageOriginalFileName = "";
+                                }
+                                else
+                                {
+                                    questions[i].Answers[j].ImageOriginalFileName = AssetDatabase.GetAssetPath(newImageOriginal);
+                                }
+
+                                SetGameDirty();
+                            }
+
+                            EditorGUI.BeginChangeCheck();
+                            questions[i].Answers[j].Answer = EditorGUILayout.TextField(questions[i].Answers[j].Answer);
+                            questions[i].Answers[j].TimeReward = EditorGUILayout.IntField(questions[i].Answers[j].TimeReward, GUILayout.Width(80));
+                            if (EditorGUI.EndChangeCheck())
+                            {
+                                SetGameDirty();
+                            }
+                        }
+                        EditorGUILayout.EndHorizontal();
+                    }
+                }
+            }
+            EditorGUILayout.EndVertical();
+        }
+        EditorGUILayout.EndHorizontal();
+    }
+
     private void DrawOpenDoor(int roundIndex)
     {
         bool collapsed;
