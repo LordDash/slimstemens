@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 
-public class CollectiveMemoryViewController : MonoBehaviour
+public class CollectiveMemoryViewController : CollectiveMemoryView
 {
 	private readonly static int VisibleHash = Animator.StringToHash("Visible");
 	
@@ -24,9 +24,9 @@ public class CollectiveMemoryViewController : MonoBehaviour
     [SerializeField]
     private CollectiveMemoryView _playerView;
     
-    private CollectiveRound _controller;
+    private CollectiveMemoryRound _controller;
     
-    public void SetController(CollectiveRound controller)
+    public void SetController(CollectiveMemoryRound controller)
     {
     	_controller = controller;
     	
@@ -58,7 +58,7 @@ public class CollectiveMemoryViewController : MonoBehaviour
 		_playVideoButton.interactable = false;
         _startTimerButton.interactable = false;
         _playerPassedButton.interactable = false;
-        _nextPuzzleButton.interactable = true;
+        _nextQuestionButton.interactable = true;
     }
     
     private void SetStateWaitingForStartTimer()
@@ -66,7 +66,7 @@ public class CollectiveMemoryViewController : MonoBehaviour
     	_playVideoButton.interactable = true;
         _startTimerButton.interactable = true;
         _playerPassedButton.interactable = false;
-        _nextPuzzleButton.interactable = false;
+        _nextQuestionButton.interactable = false;
     }
 
     private void SetStateToWaitingForAnswer()
@@ -81,7 +81,7 @@ public class CollectiveMemoryViewController : MonoBehaviour
     	_playVideoButton.interactable = false;
         _startTimerButton.interactable = false;
         _playerPassedButton.interactable = true;
-        _nextPuzzleButton.interactable = false;
+        _nextQuestionButton.interactable = false;
     }
 
     public override void SetTeamData(TeamData[] teams)

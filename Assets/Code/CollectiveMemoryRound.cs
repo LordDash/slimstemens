@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System;
+using System.Collections.Generic;
 
 public class CollectiveMemoryRound : GameRound
 {
@@ -20,8 +21,12 @@ public class CollectiveMemoryRound : GameRound
 	
 	private Action _onWaitingForTimerStart = () => {};
 	private Action _onWaitingForNextQuestion = () => {};
-	
-	private TeamData CurrentTeam
+
+    private Action<float> _timer;
+
+    private CollectiveMemoryViewController _view;
+
+    private TeamData CurrentTeam
     {
         get{ return _teams[_currentTeamIndex]; }
     }
@@ -71,7 +76,8 @@ public class CollectiveMemoryRound : GameRound
         _questions = questions as CollectiveMemoryQuestion[];
         
         LoadQuestionVideos();
-        
+        _timer = UpdateCurrentTeamTime;
+
         _currentQuestionTeamsPlayedIndeces = new List<int>();
         _roundTeamsPlayedIndeces = new List<int>();
         
@@ -94,8 +100,13 @@ public class CollectiveMemoryRound : GameRound
     		_loadedQuestionVideos[i] = FileLoader.Load<MovieTexture>(_questions[i].QuestionFileName);
     	}
     }
-    
-	public void NextQuestion()
+
+    private void UpdateCurrentTeamTime(float timeDelta)
+    {
+        CurrentTeam.Time -= timeDelta;
+    }
+
+    public void NextQuestion()
 	{
 		_currentCorrectAnswersCount = 0;
         _currentQuestionTeamsPlayedIndeces.Clear();
@@ -176,7 +187,7 @@ public class CollectiveMemoryRound : GameRound
     public void ShowAnswer(int answerIndex)
     {
     	// show answer
-    	_view.ShowAnswer(answerIndex, timeReward, false);
+    	_view.ShowAnswer(answerIndex, -1, false);
 	}
 
     

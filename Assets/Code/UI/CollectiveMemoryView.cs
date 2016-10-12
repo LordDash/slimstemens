@@ -37,7 +37,7 @@ public class CollectiveMemoryView : MonoBehaviour
     {
     	for(int i = 0; i < _answers.Length && i < answers.Length; i++)
     	{
-    		_answers[i].SetAnswer(-1, answer[i]);
+    		_answers[i].SetAnswer(-1, answers[i]);
     	}
     	
     	_videoPlayer.SetMovie(video, null);
