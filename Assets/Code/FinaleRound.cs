@@ -210,12 +210,19 @@ public class FinaleRound : GameRound
         {
             ++_currentQuestionIndex;
 
-            // Set question
-            _view.SetAnswers(CurrentQuestion.Question, CurrentQuestion.GetTimeRewards(), CurrentQuestion.GetAnswers());
+            if (_currentQuestionIndex < _questions.Length)
+            {
+                // Set question
+                _view.SetAnswers(CurrentQuestion.Question, CurrentQuestion.GetTimeRewards(), CurrentQuestion.GetAnswers());
 
-            _view.SetActiveTeam(_currentTeamIndex, false);
+                _view.SetActiveTeam(_currentTeamIndex, false);
 
-            _onWaitingForTimerStart();
+                _onWaitingForTimerStart();
+            }
+            else
+            {
+                GameManager.NextRound();
+            }
         }
         else
         {
