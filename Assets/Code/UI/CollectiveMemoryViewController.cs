@@ -5,6 +5,9 @@ using System.Collections;
 public class CollectiveMemoryViewController : CollectiveMemoryView
 {
 	[SerializeField]
+	private CanvasGroup _answerButtonsCanvas;
+	
+	[SerializeField]
 	private Button[] _answerButtons;
 
 	[SerializeField]
@@ -53,6 +56,7 @@ public class CollectiveMemoryViewController : CollectiveMemoryView
             _answerButtons[i].onClick.AddListener(() => { _answerButtons[index].interactable = false; _controller.ShowAnswer(index); });
         }
 
+		_answerButtonsCanvas.interactable = false;
 		_playVideoButton.interactable = false;
         _startTimerButton.interactable = false;
         _playerPassedButton.interactable = false;
@@ -61,6 +65,7 @@ public class CollectiveMemoryViewController : CollectiveMemoryView
     
     private void SetStateWaitingForStartTimer()
     {
+    	_answerButtonsCanvas.interactable = false;
     	_playVideoButton.interactable = true;
         _startTimerButton.interactable = true;
         _playerPassedButton.interactable = false;
@@ -76,6 +81,7 @@ public class CollectiveMemoryViewController : CollectiveMemoryView
             _answerButtons[i].onClick.AddListener(() => { _answerButtons[index].interactable = false; _controller.CorrectAnswer(index); });
         }
     	
+    	_answerButtonsCanvas.interactable = true;
     	_playVideoButton.interactable = false;
         _startTimerButton.interactable = false;
         _playerPassedButton.interactable = true;

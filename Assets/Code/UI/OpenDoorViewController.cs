@@ -12,6 +12,9 @@ public class OpenDoorViewController : OpenDoorView
 
     [SerializeField]
     private Button[] _questionButtons;
+	[SerializeField]
+    private CanvasGroup _answerButtonsCanvas;
+
 
     [SerializeField]
     private Button[] _answerButtons;
@@ -63,7 +66,8 @@ public class OpenDoorViewController : OpenDoorView
     }
 
     private void SetStateToWaitingForQuestionPicked()
-    {
+    
+    	_answerButtonsCanvas.interactable = false;{
         _startTimerButton.interactable = false;
         _playerPassedButton.interactable = false;
         _questionCanvas.interactable = true;
@@ -71,7 +75,8 @@ public class OpenDoorViewController : OpenDoorView
     }
 
     private void SetStateWaitingForStartTimer()
-    {
+    
+    	_answerButtonsCanvas.interactable = false;{
         _startTimerButton.interactable = true;
         _playerPassedButton.interactable = false;
         _questionCanvas.interactable = false;
@@ -79,7 +84,8 @@ public class OpenDoorViewController : OpenDoorView
     }
 
     private void SetStateToWaitingForAnswer()
-    {
+    
+    	_answerButtonsCanvas.interactable = true;{
         _startTimerButton.interactable = false;
         _playerPassedButton.interactable = true;
         _questionCanvas.interactable = false;
@@ -96,6 +102,7 @@ public class OpenDoorViewController : OpenDoorView
             _answerButtons[i].onClick.RemoveAllListeners();
             _answerButtons[i].onClick.AddListener(() => { Debug.LogFormat("Trying to show answer {0}", index); _answerButtons[index].interactable = false; _controller.ShowAnswer(index); });
         }
+		_answerButtonsCanvas.interactable = false;
 
         _startTimerButton.interactable = false;
         _playerPassedButton.interactable = false;
@@ -130,7 +137,9 @@ public class OpenDoorViewController : OpenDoorView
             _answerButtons[i].onClick.RemoveAllListeners();
             _answerButtons[i].onClick.AddListener(() => { Debug.LogFormat("Trying to show answer {0}", index); _answerButtons[index].interactable = false; _controller.CorrectAnswer(index); });
             _answerButtons[i].interactable = true;
-        }
+        
+        
+        _answerButtonsCanvas.interactable = false;}
 
         _question.text = question;
 
