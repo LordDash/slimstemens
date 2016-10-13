@@ -92,7 +92,7 @@ public class Game
     {
         for (int i = 0; i < SerializedRoundQuestions.Count; i++)
         {
-            if (SerializedRoundQuestions[i] != null && _roundQuestionsContainers[i] != null)
+            if (SerializedRoundQuestions[i] != null && i < _roundQuestionsContainers.Count && _roundQuestionsContainers[i] != null)
             {
                 SerializedRoundQuestions[i] = JsonUtility.ToJson(_roundQuestionsContainers[i]);
             }

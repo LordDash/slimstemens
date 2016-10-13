@@ -51,6 +51,10 @@ public static class GameManager
                 currentGameRound = new GalleryRound();
                 questions = GetCurrentRoundQuestions<GalleryQuestion>();
                 break;
+            case Round.CollectiveMemory:
+                currentGameRound = new CollectiveMemoryRound();
+                questions = GetCurrentRoundQuestions<CollectiveMemoryQuestion>();
+                break;
             case Round.Bonus:
                 currentGameRound = new BonusRound();
                 break;

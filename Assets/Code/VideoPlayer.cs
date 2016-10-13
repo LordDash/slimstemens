@@ -4,7 +4,10 @@ using UnityEngine.UI;
 public class VideoPlayer : MonoBehaviour
 {
     [SerializeField]
-    private Image _movieRender;
+    private RawImage _movieRender;
+
+    [SerializeField]
+    private Image _previewImage;
 
     [SerializeField]
     private AudioSource _audioSource;
@@ -16,14 +19,16 @@ public class VideoPlayer : MonoBehaviour
     {
         _firstFrame = firstFrameSprite;
         _movie = movie;
-        _movieRender.material.mainTexture = movie;
+        _previewImage.gameObject.SetActive(true);
+        _previewImage.overrideSprite = _firstFrame;
+        _movieRender.texture = movie;
         _audioSource.clip = _movie.audioClip;
     }
 
     [ContextMenu("Play")]
     public void Play()
     {
-        _movieRender.sprite = null;
+        _previewImage.gameObject.SetActive(false);
         _movie.Play();
         _audioSource.Play();
     }
@@ -31,7 +36,7 @@ public class VideoPlayer : MonoBehaviour
     [ContextMenu("Stop")]
     public void Stop()
     {
-        _movieRender.sprite = _firstFrame;
+        _previewImage.gameObject.SetActive(true);
         _movie.Stop();
         _audioSource.Stop();
     }

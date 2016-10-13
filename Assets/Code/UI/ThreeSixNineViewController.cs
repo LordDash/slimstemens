@@ -29,13 +29,13 @@ public class ThreeSixNineViewController : ThreeSixNineView
         }
     }
 
-    public override void SetQuestion(int index, string question, string answer)
+    public override void SetQuestion(int index, string question, string playerQuestion, string answer)
     {
-        base.SetQuestion(index, question, answer);
+        base.SetQuestion(index, question, playerQuestion, answer);
 
         if (_playerView != null)
         {
-            _playerView.SetQuestion(index, question, "");
+            _playerView.SetQuestion(index, playerQuestion, "", "");
         }
     }
 

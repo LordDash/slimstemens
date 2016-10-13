@@ -4,6 +4,7 @@
 public class ThreeSixNineQuestion : Question
 {
     public string Question;
+    public string PlayerQuestion;
     public string Answer;
     public int TimeReward;
 

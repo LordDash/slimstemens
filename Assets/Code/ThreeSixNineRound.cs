@@ -72,7 +72,7 @@ public class ThreeSixNineRound : GameRound
         _view.SetController(this);
         _view.SetTeamData(_teams);
         _view.SetActiveTeam(_currentTeamIndex);
-        _view.SetQuestion(-1, "", "Press Next Question to start the game.");
+        _view.SetQuestion(-1, "", "", "Press Next Question to start the game.");
 
         _onWaitingForNextQuestion();
     }
@@ -94,7 +94,7 @@ public class ThreeSixNineRound : GameRound
         if(_currentQuestionIndex < _questions.Length)
         {
             Debug.LogFormat("[ThreeSixNine] Next question\n{0}", CurrentQuestion.ToString());
-            _view.SetQuestion(_currentQuestionIndex, CurrentQuestion.Question, CurrentQuestion.Answer);
+            _view.SetQuestion(_currentQuestionIndex, CurrentQuestion.Question, CurrentQuestion.PlayerQuestion, CurrentQuestion.Answer);
         }
         else
         {

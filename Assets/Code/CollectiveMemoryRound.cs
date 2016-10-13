@@ -83,7 +83,8 @@ public class CollectiveMemoryRound : GameRound
         
         _currentQuestionTeamIndex = -1;
         _currentTeamIndex = -1;
-        
+        _currentQuestionIndex = -1;
+
         _view = GameObject.FindObjectOfType<CollectiveMemoryViewController>();
         _view.SetController(this);
         _view.SetTeamData(_teams);

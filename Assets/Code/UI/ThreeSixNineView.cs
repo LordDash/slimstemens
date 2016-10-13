@@ -26,7 +26,7 @@ public class ThreeSixNineView : MonoBehaviour
         }
     }
 
-    public virtual void SetQuestion(int index, string question, string answer)
+    public virtual void SetQuestion(int index, string question, string playerQuestion, string answer)
     {
         _questionField.text = question;
         _answerField.text = answer;
