@@ -5,6 +5,9 @@ using UnityEngine.UI;
 public class PuzzleViewController : PuzzleView
 {
     [SerializeField]
+    private CanvasGroup _answerButtonsCanvas;
+
+    [SerializeField]
     private Button[] _answerButtons;
 
     [SerializeField]
@@ -93,10 +96,12 @@ public class PuzzleViewController : PuzzleView
         _nextPlayerButton.interactable = true;
         _playerPassedButton.interactable = false;
         _nextPuzzleButton.interactable = false;
+        _answerButtonsCanvas.interactable = false;
     }
 
     private void SetStateToWaitingForAnswer()
     {
+        _answerButtonsCanvas.interactable = true;
         _nextPlayerButton.interactable = false;
         _playerPassedButton.interactable = true;
         _nextPuzzleButton.interactable = false;
@@ -111,6 +116,7 @@ public class PuzzleViewController : PuzzleView
             _answerButtons[i].onClick.AddListener(() => { Debug.LogFormat("Trying to show answer {0}", index); _answerButtons[index].interactable = false; _controller.ShowAnswer(index); });
         }
 
+        _answerButtonsCanvas.interactable = true;
         _nextPlayerButton.interactable = false;
         _playerPassedButton.interactable = false;
         _nextPuzzleButton.interactable = true;

@@ -12,9 +12,9 @@ public class OpenDoorViewController : OpenDoorView
 
     [SerializeField]
     private Button[] _questionButtons;
+
 	[SerializeField]
     private CanvasGroup _answerButtonsCanvas;
-
 
     [SerializeField]
     private Button[] _answerButtons;
@@ -102,7 +102,7 @@ public class OpenDoorViewController : OpenDoorView
             _answerButtons[i].onClick.RemoveAllListeners();
             _answerButtons[i].onClick.AddListener(() => { Debug.LogFormat("Trying to show answer {0}", index); _answerButtons[index].interactable = false; _controller.ShowAnswer(index); });
         }
-		_answerButtonsCanvas.interactable = false;
+		_answerButtonsCanvas.interactable = true;
 
         _startTimerButton.interactable = false;
         _playerPassedButton.interactable = false;
