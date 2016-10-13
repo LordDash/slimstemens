@@ -202,7 +202,7 @@ public class FinaleRound : GameRound
     public void NextQuestion()
     {
         _currentCorrectAnswersCount = 0;
-        _currentQuestionTeamsPlayedIndeces.Clear()
+        _currentQuestionTeamsPlayedIndeces.Clear();
         _currentTeamIndex = -1;
 
         _currentTeamIndex = GetNextTeamIndex(_currentQuestionTeamsPlayedIndeces, _currentTeamIndex);

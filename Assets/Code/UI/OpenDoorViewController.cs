@@ -66,8 +66,8 @@ public class OpenDoorViewController : OpenDoorView
     }
 
     private void SetStateToWaitingForQuestionPicked()
-    
-    	_answerButtonsCanvas.interactable = false;{
+    { 
+    	_answerButtonsCanvas.interactable = false;
         _startTimerButton.interactable = false;
         _playerPassedButton.interactable = false;
         _questionCanvas.interactable = true;
@@ -75,8 +75,8 @@ public class OpenDoorViewController : OpenDoorView
     }
 
     private void SetStateWaitingForStartTimer()
-    
-    	_answerButtonsCanvas.interactable = false;{
+    { 
+    	_answerButtonsCanvas.interactable = false;
         _startTimerButton.interactable = true;
         _playerPassedButton.interactable = false;
         _questionCanvas.interactable = false;
@@ -84,8 +84,8 @@ public class OpenDoorViewController : OpenDoorView
     }
 
     private void SetStateToWaitingForAnswer()
-    
-    	_answerButtonsCanvas.interactable = true;{
+    { 
+    	_answerButtonsCanvas.interactable = true;
         _startTimerButton.interactable = false;
         _playerPassedButton.interactable = true;
         _questionCanvas.interactable = false;
