@@ -55,6 +55,10 @@ public static class GameManager
                 currentGameRound = new CollectiveMemoryRound();
                 questions = GetCurrentRoundQuestions<CollectiveMemoryQuestion>();
                 break;
+            case Round.Finale:
+                currentGameRound = new FinaleRound();
+                questions = GetCurrentRoundQuestions<FinaleQuestion>();
+                break;
             case Round.Bonus:
                 currentGameRound = new BonusRound();
                 break;
@@ -75,13 +79,12 @@ public class TeamData
 
 public enum Round
 {
-    ThreeSixNine,
-    OpenDoor,
-    Puzzle,
-    Framed,
-    Gallery,
-    CollectiveMemory,
-    Final,
-    Bonus,
-    Done
+    ThreeSixNine = 0,
+    OpenDoor = 1,
+    Puzzle = 2,
+    Gallery = 4,
+    CollectiveMemory = 5,
+    Finale = 6,
+    Bonus = 7,
+    Done = 8
 }

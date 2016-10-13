@@ -238,14 +238,17 @@ public class GameEditor : EditorWindow
                     case Round.Gallery:
                         DrawGallery(i);
                         break;
+                    case Round.CollectiveMemory:
+                        DrawCollectiveMemory(i);
+                        break;
+                    case Round.Finale:
+                        DrawFinale(i);
+                        break;
                     case Round.Bonus:
                         DrawBonus(i);
                         break;
                     case Round.Done:
                         DrawDone(i);
-                        break;
-                    case Round.CollectiveMemory:
-                        DrawCollectiveMemory(i);
                         break;
                 }
             }
@@ -358,8 +361,24 @@ public class GameEditor : EditorWindow
                         collectiveMemoryContainer.Questions = collectiveMemoryQuestions;
 
                         _game.AddRound(_roundToAdd, collectiveMemoryContainer);
+                        break;
+                    case Round.Finale:
+                        FinaleQuestion[] finaleQuestions = new FinaleQuestion[12];
+                        for (int i = 0; i < finaleQuestions.Length; i++)
+                        {
+                            finaleQuestions[i] = new FinaleQuestion();
+                            finaleQuestions[i].Answers = new FinaleAnswer[5];
 
-                        _game.AddRound<Question>(_roundToAdd, null);
+                            for (int j = 0; j < finaleQuestions[i].Answers.Length; j++)
+                            {
+                                finaleQuestions[i].Answers[j] = new FinaleAnswer();
+                            }
+                        }
+
+                        QuestionContainer<FinaleQuestion> finaleContainer = new QuestionContainer<FinaleQuestion>();
+                        finaleContainer.Questions = finaleQuestions;
+
+                        _game.AddRound(_roundToAdd, finaleContainer);
                         break;
                 }
 
@@ -410,6 +429,100 @@ public class GameEditor : EditorWindow
             EditorGUILayout.LabelField("", GUILayout.Width(20));
 
             EditorGUILayout.LabelField("Bonus", EditorStyles.boldLabel);
+        }
+        EditorGUILayout.EndHorizontal();
+    }
+
+    private void DrawFinale(int roundIndex)
+    {
+        bool collapsed;
+        _roundCollapsed.TryGetValue(roundIndex, out collapsed);
+
+        FinaleQuestion[] questions = _game.GetQuestionsForRound<FinaleQuestion>(roundIndex);
+
+        EditorGUILayout.BeginHorizontal();
+        {
+            if (GUILayout.Button("x", GUILayout.Width(20)))
+            {
+                if (EditorUtility.DisplayDialog("Delete round", "Are you sure you want to delete this round?", "Delete", "Cancel"))
+                {
+                    _roundIndexToRemove = roundIndex;
+                }
+            }
+
+            if (GUILayout.Button(collapsed ? "▼" : "▲", GUILayout.Width(20)))
+            {
+                _roundCollapsed[roundIndex] = !collapsed;
+            }
+
+            EditorGUILayout.LabelField("Finale" + (collapsed ? string.Format(" ({0})", questions.Length) : ""), EditorStyles.boldLabel);
+        }
+        EditorGUILayout.EndHorizontal();
+
+        if (collapsed)
+        {
+            return;
+        }
+
+        EditorGUILayout.BeginHorizontal();
+        {
+            EditorGUILayout.LabelField("", GUILayout.Width(40));
+
+            EditorGUILayout.BeginVertical();
+            {
+                for (int i = 0; i < questions.Length; i++)
+                {
+                    bool questionCollapsed;
+                    if (_questionCollapsed.ContainsKey(roundIndex) == false)
+                    {
+                        _questionCollapsed[roundIndex] = new Dictionary<int, bool>();
+                    }
+                    _questionCollapsed[roundIndex].TryGetValue(i, out questionCollapsed);
+
+                    EditorGUILayout.BeginHorizontal();
+                    {
+                        if (GUILayout.Button(questionCollapsed ? "▼" : "▲", GUILayout.Width(20)))
+                        {
+                            _questionCollapsed[roundIndex][i] = !questionCollapsed;
+                        }
+
+                        EditorGUILayout.LabelField("Question " + (i + 1) + (questionCollapsed ? string.Format(": {0}", questions[i].Question) : ""));
+                    }
+                    EditorGUILayout.EndHorizontal();
+
+                    if (questionCollapsed)
+                    {
+                        continue;
+                    }
+
+                    EditorGUI.BeginChangeCheck();
+
+                    questions[i].Question = EditorGUILayout.TextField("Question", questions[i].Question);
+
+                    EditorGUILayout.BeginHorizontal();
+                    {
+                        EditorGUILayout.LabelField("Answer");
+                        EditorGUILayout.LabelField("Time Reward", GUILayout.Width(80));
+                    }
+                    EditorGUILayout.EndHorizontal();
+
+                    for (int j = 0; j < questions[i].Answers.Length; j++)
+                    {
+                        EditorGUILayout.BeginHorizontal();
+                        { 
+                            questions[i].Answers[j].Answer = EditorGUILayout.TextField(questions[i].Answers[j].Answer);
+                            questions[i].Answers[j].TimeReward = EditorGUILayout.IntField(questions[i].Answers[j].TimeReward, GUILayout.Width(80));
+                        }
+                        EditorGUILayout.EndHorizontal();
+                    }
+
+                    if (EditorGUI.EndChangeCheck())
+                    {
+                        SetGameDirty();
+                    }
+                }
+            }
+            EditorGUILayout.EndVertical();
         }
         EditorGUILayout.EndHorizontal();
     }

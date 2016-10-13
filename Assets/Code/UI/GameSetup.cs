@@ -1,11 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using UnityEngine.UI;
 
 public class GameSetup : MonoBehaviour
 {
     [SerializeField]
-    private UnityEngine.UI.Button _startButton;
+    private Button _startButton;
+
+    [SerializeField]
+    private InputField[] _teamNameInputs;
 
     [SerializeField]
     private TextAsset gameFile;
@@ -27,6 +31,13 @@ public class GameSetup : MonoBehaviour
     {
         Game game = JsonUtility.FromJson<Game>(gameFile.text);
 
-        GameManager.Start(game, new[] { new TeamData() { Name = "Stijn", Time = 60 }, new TeamData() { Name = "Dave", Time = 60 }, new TeamData() { Name = "Kim", Time = 60 } });
+        TeamData[] teams = new TeamData[_teamNameInputs.Length];
+
+        for (int i = 0; i < _teamNameInputs.Length; i++)
+        {
+            teams[i] = new TeamData() { Name = _teamNameInputs[i].text, Time = 60 };
+        }
+
+        GameManager.Start(game, teams);
     }
 }
